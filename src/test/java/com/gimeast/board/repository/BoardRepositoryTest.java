@@ -5,8 +5,14 @@ import com.gimeast.board.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -53,8 +59,51 @@ class BoardRepositoryTest {
 
     }
 
+    @Test
+    void 조회_BoardWithMember() throws Exception {
 
+        Object result = boardRepository.getBoardWithMember(100L);
 
+        Object[] arr = (Object[]) result;
+        System.out.println("========================");
+        System.out.println(Arrays.toString(arr));
+        System.out.println("========================");
 
+    }
+
+    @Test
+    void 조회_BoardWithReply() throws Exception {
+
+        List<Object[]> result = boardRepository.getBoardWithReply(100L);
+
+        for (Object[] arr : result) {
+            System.out.println("========================");
+            System.out.println(Arrays.toString(arr));
+            System.out.println("========================");
+        }
+
+    }
+
+    @Test
+    void 조회_BoardWithReplyCount() throws Exception {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+        Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageable);
+
+        result.get().forEach(row -> {
+            Object[] arr = row;
+            System.out.println(Arrays.toString(arr));
+        });
+
+    }
+
+    @Test
+    void 상세조회() throws Exception {
+
+        Object result = boardRepository.getBoardByBno(100L);
+        Object[] arr = (Object[]) result;
+
+        System.out.println(Arrays.toString(arr));
+
+    }
 
 }
