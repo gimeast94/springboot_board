@@ -23,4 +23,12 @@ public class Board extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "email")
     private Member member;
+
+    public void changeTitleAndContent(String title, String content) {
+        this.title = title;
+        this.content = content;
+
+    }
+
+
 }

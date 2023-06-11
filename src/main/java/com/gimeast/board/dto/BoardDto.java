@@ -18,4 +18,6 @@ public class BoardDto {
     private LocalDateTime modDate;
     private Long replyCount;
 
+
+
 }

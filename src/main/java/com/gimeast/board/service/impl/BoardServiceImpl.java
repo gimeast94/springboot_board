@@ -6,16 +6,15 @@ import com.gimeast.board.dto.PageResultDto;
 import com.gimeast.board.entity.Board;
 import com.gimeast.board.entity.Member;
 import com.gimeast.board.repository.BoardRepository;
+import com.gimeast.board.repository.ReplyRepository;
 import com.gimeast.board.service.BoardService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -24,9 +23,11 @@ import java.util.function.Function;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
 
-    public BoardServiceImpl(BoardRepository boardRepository) {
+    public BoardServiceImpl(BoardRepository boardRepository, ReplyRepository replyRepository) {
         this.boardRepository = boardRepository;
+        this.replyRepository = replyRepository;
     }
 
     @Override
@@ -40,6 +41,7 @@ public class BoardServiceImpl implements BoardService {
         return entity.getBno();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public PageResultDto<BoardDto, Object[]> getList(PageRequestDto pageRequestDto) {
 
@@ -50,6 +52,7 @@ public class BoardServiceImpl implements BoardService {
         return new PageResultDto<>(result, fn);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public BoardDto get(Long bno) {
 
@@ -60,5 +63,22 @@ public class BoardServiceImpl implements BoardService {
         BoardDto result = entityToDto((Board) arr[0], (Member) arr[1], (Long) arr[2]);
 
         return result;
+    }
+
+    @Override
+    public void removeWithReplies(Long bno) {
+
+        replyRepository.deleteByBno(bno);
+        boardRepository.deleteById(bno);
+
+    }
+
+    @Override
+    public void modify(BoardDto boardDto) {
+        Optional<Board> board = boardRepository.findById(boardDto.getBno());
+
+        if (board.isPresent()) {
+            board.get().changeTitleAndContent(boardDto.getTitle(), boardDto.getContent());
+        }
     }
 }

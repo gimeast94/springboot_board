@@ -64,4 +64,32 @@ class BoardServiceImplTest {
 
     }
 
+    @Test
+    @Rollback(value = false)
+    void 삭제() throws Exception {
+        //given
+        Long bno = 1L;
+
+        //when
+        boardService.removeWithReplies(bno);
+
+    }
+
+    @Test
+    @Rollback(value = false)
+    void 수정() throws Exception {
+        //given
+        BoardDto boardDto = BoardDto.builder()
+                .bno(2L)
+                .title("제목 변경...")
+                .content("내용 변경...")
+                .build();
+
+        //when
+        boardService.modify(boardDto);
+
+        //then
+
+    }
+
 }

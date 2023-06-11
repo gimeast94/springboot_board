@@ -57,6 +57,8 @@ public interface BoardService {
 
     BoardDto get(Long bno);
 
+    void removeWithReplies(Long bno);
 
+    void modify(BoardDto boardDto);
 
 }
