@@ -21,7 +21,6 @@ public class PageResultDto<D,E> {
     private boolean prev, next;//이전 여부, 다음 여부
     private List<Integer> pageList;//페이지 번호 목록
 
-
     /**
      * Page<E>의 내용물 중 Entity객체를 DTO로 변환
      * @param result
