@@ -61,4 +61,5 @@ public interface BoardService {
 
     void modify(BoardDto boardDto);
 
+
 }
