@@ -7,9 +7,8 @@ import com.gimeast.board.service.BoardService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.model.IModel;
 
 @Controller
@@ -30,9 +29,53 @@ public class BoardController {
         model.addAttribute("result", list);
     }
 
+    @GetMapping("/register")
+    public void register() {
 
+    }
 
+    @PostMapping("/register")
+    public String registerPost(BoardDto dto, RedirectAttributes redirectAttributes) {
+        Long bno = boardService.register(dto);
 
+        redirectAttributes.addFlashAttribute("msg", bno);
+
+        return "redirect:/board/list";
+    }
+
+    @GetMapping("/read")
+    public void read(@ModelAttribute PageRequestDto pageRequestDto,
+                     @RequestParam(defaultValue = "R") String flag,
+                     Long bno,
+                     Model model) {
+
+        BoardDto boardDto = boardService.get(bno);
+
+        model.addAttribute("pageRequestDto", pageRequestDto);
+        model.addAttribute("flag", flag);
+        model.addAttribute("dto", boardDto);
+    }
+
+    @PostMapping("/remove")
+    public String remove(Long bno, RedirectAttributes redirectAttributes) {
+
+        boardService.removeWithReplies(bno);
+        redirectAttributes.addFlashAttribute("msg", bno);
+
+        return "redirect:/board/list";
+    }
+
+    @PostMapping("modify")
+    public String modify(@ModelAttribute BoardDto boardDto, PageRequestDto pageRequestDto, RedirectAttributes redirectAttributes) {
+        boardService.modify(boardDto);
+
+        redirectAttributes.addAttribute("page", pageRequestDto.getPage());
+        redirectAttributes.addAttribute("type", pageRequestDto.getType());
+        redirectAttributes.addAttribute("keyword", pageRequestDto.getKeyword());
+        redirectAttributes.addAttribute("bno", boardDto.getBno());
+
+        return "redirect:/board/read";
+    }
 
 
 }
