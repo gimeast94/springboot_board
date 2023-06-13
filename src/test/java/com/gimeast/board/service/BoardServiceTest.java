@@ -1,20 +1,17 @@
-package com.gimeast.board.service.impl;
+package com.gimeast.board.service;
 
 import com.gimeast.board.dto.BoardDto;
 import com.gimeast.board.dto.PageRequestDto;
 import com.gimeast.board.dto.PageResultDto;
-import com.gimeast.board.service.BoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Transactional
-class BoardServiceImplTest {
+class BoardServiceTest {
 
     @Autowired
     private BoardService boardService;
